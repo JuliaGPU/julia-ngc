@@ -1,3 +1,6 @@
 using CUDAdrv
 
-println(CUDAdrv.name(CuDevice(0)))
+println("Available GPUs:")
+for dev in devices()
+    println("- ", CUDAdrv.name(dev))
+end
