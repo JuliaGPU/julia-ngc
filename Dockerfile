@@ -22,8 +22,8 @@ RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
               Pkg.add([PackageSpec(name="CUDAapi",      rev="v1.1.0"), \
                        PackageSpec(name="CUDAdrv",      rev="v3.1.0"), \
                        PackageSpec(name="CUDAnative",   rev="v2.3.0"), \
-                       PackageSpec(name="CuArrays",     rev="v1.2.1")]);'
-
+                       PackageSpec(name="CuArrays",     rev="v1.2.1")]);' && \
+    find /usr/local/share/julia/packages -maxdepth 2 -mindepth 2 -exec chmod 0755 {} \;
 
 # user environment
 
@@ -32,7 +32,7 @@ RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
 #
 # the actual modification of DEPOT_PATH happens in startup.jl
 
-VOLUME ["/data"]
+RUN mkdir -m 0777 /data
 
 ENV JULIA_HISTORY=/data/logs/repl_history.jl
 
