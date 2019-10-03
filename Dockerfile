@@ -23,7 +23,10 @@ RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
     # work around JuliaPackaging/BinaryProvider.jl#183
     chown root:root -R /usr/local/share/julia/packages/*/*/deps/usr && \
     # work around JuliaPackaging/BinaryBuilder.jl#447
-    chmod 755 /usr/local/share/julia/packages/*/*/deps/usr
+    chmod 755 /usr/local/share/julia/packages/*/*/deps/usr && \
+    # work around JuliaLang/julia#25971
+    # (this will matter when precompiling during container build)
+    chmod 644 /usr/local/share/julia/compiled/*/*/*.ji
 
 
 # user environment
