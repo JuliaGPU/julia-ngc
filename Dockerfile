@@ -22,7 +22,12 @@ RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
               Pkg.add([PackageSpec(name="CUDAapi",      version="v1.1.0"), \
                        PackageSpec(name="CUDAdrv",      version="v3.1.0"), \
                        PackageSpec(name="CUDAnative",   version="v2.3.0"), \
-                       PackageSpec(name="CuArrays",     version="v1.2.1")]);'
+                       PackageSpec(name="CuArrays",     version="v1.2.1")]);' && \
+    # work around JuliaPackaging/BinaryProvider.jl#183
+    chown root:root -R /usr/local/share/julia/packages/*/*/deps/usr && \
+    # work around JuliaPackaging/BinaryBuilder.jl#447
+    chmod 755 /usr/local/share/julia/packages/*/*/deps/usr
+
 
 # user environment
 
