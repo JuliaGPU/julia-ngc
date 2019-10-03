@@ -16,13 +16,10 @@ RUN curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/1.2/julia-1.2.0-
 
 # system-wide packages
 
-# versioned packages for reproducibility
+COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.2/
+
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
-    julia -e 'using Pkg; \
-              Pkg.add([PackageSpec(name="CUDAapi",      version="v1.1.0"), \
-                       PackageSpec(name="CUDAdrv",      version="v3.1.0"), \
-                       PackageSpec(name="CUDAnative",   version="v2.3.0"), \
-                       PackageSpec(name="CuArrays",     version="v1.2.1")]);' && \
+    julia -e 'using Pkg; Pkg.instantiate();' && \
     # work around JuliaPackaging/BinaryProvider.jl#183
     chown root:root -R /usr/local/share/julia/packages/*/*/deps/usr && \
     # work around JuliaPackaging/BinaryBuilder.jl#447
@@ -33,10 +30,9 @@ RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
 
 # we use a single folder, /data, as the user depot regardless of the actual user
 # (i.e., to be compatible with `docker run --user`, which might not have a $HOME)
-#
-# the actual modification of DEPOT_PATH happens in startup.jl
 
 RUN mkdir -m 0777 /data
+ENV JULIA_DEPOT_PATH=/data:/usr/local/share/julia
 
 ENV JULIA_HISTORY=/data/logs/repl_history.jl
 
