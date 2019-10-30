@@ -5,4 +5,4 @@ build_image:
   script:
     - docker build -t ngc .
     - docker run --runtime nvidia ngc -e 'using Pkg;
-        Pkg.test(["CUDAapi", "CUDAdrv", "CUDAnative", "CuArrays"]);'
+                                          Pkg.test(collect(keys(Pkg.installed())));'
