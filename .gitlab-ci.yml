@@ -1,8 +1,28 @@
 before_script:
   - docker info
 
-build_image:
+.build:
   script:
-    - docker build -t ngc .
-    - docker run --runtime nvidia ngc -e 'using Pkg;
-                                          Pkg.test(collect(keys(Pkg.installed())));'
+    - docker build -t ${CI_JOB_ID} --build-arg IMAGE=$IMAGE .
+    - docker run --rm --runtime nvidia $CI_JOB_ID -e 'using Pkg;
+                                                      Pkg.test(collect(keys(Pkg.installed())));'
+
+cuda:10.1:
+  extends: .build
+  variables:
+    IMAGE: 'nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04'
+
+cuda:10.0:
+  extends: .build
+  variables:
+    IMAGE: 'nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04'
+
+cuda:9.2:
+  extends: .build
+  variables:
+    IMAGE: 'nvidia/cuda:9.2-cudnn7-devel-ubuntu18.04'
+
+cuda:9.0:
+  extends: .build
+  variables:
+    IMAGE: 'nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04'
