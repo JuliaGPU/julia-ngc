@@ -5,9 +5,10 @@ before_script:
 .build:
   script:
     - docker build -t ${CI_JOB_ID} --build-arg IMAGE=$IMAGE .
-    - docker run --rm --runtime nvidia $CI_JOB_ID -e 'using Pkg;
-                                                      run(`nvcc --version`);
-                                                      Pkg.test(collect(keys(Pkg.installed())));'
+    - docker run --rm --runtime nvidia --env CUARRAYS_MEMORY_LIMIT $CI_JOB_ID -e '
+          using Pkg;
+          run(`nvcc --version`);
+          Pkg.test(collect(keys(Pkg.installed())));'
     - docker rmi ${CI_JOB_ID}
 
 cuda:10.1:
