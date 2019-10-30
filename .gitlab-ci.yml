@@ -27,10 +27,3 @@ cuda:9.2:
   extends: .build
   variables:
     IMAGE: 'nvidia/cuda:9.2-cudnn7-devel-ubuntu18.04'
-
-cuda:9.0:
-  extends: .build
-  variables:
-    IMAGE: 'nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04'
-  allow_failure: true # https://github.com/JuliaGPU/CuArrays.jl/issues/295
-                      # probably an issue with CUDA 9.0
