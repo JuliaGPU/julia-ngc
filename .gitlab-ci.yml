@@ -2,28 +2,43 @@ before_script:
   - docker info
   - nvidia-smi
 
+
+# template
+
 .build:
   script:
-    - docker build -t ${CI_JOB_ID} --build-arg IMAGE=$IMAGE .
-    - docker run --rm --runtime nvidia --env CUARRAYS_MEMORY_LIMIT $CI_JOB_ID -e '
+    - docker build -t ${CI_JOB_ID} $CI_DOCKER_BUILD_ARGS .
+    - docker run --rm --runtime nvidia --env CUARRAYS_MEMORY_LIMIT $CI_DOCKER_RUN_ARGS $CI_JOB_ID -e '
           using Pkg;
+          run(`id`);
           run(`nvcc --version`);
           Pkg.test(collect(keys(Pkg.installed())));'
     - docker rmi ${CI_JOB_ID}
 
+
+# CUDA versions
+
 cuda:10.1:
   extends: .build
   variables:
-    IMAGE: 'nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04'
+    CI_DOCKER_BUILD_ARGS: '--build-arg IMAGE=nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04'
   allow_failure: true # https://github.com/JuliaGPU/CuArrays.jl/pull/431
                       # not part of a tagged version of CuArrays.jl yet
 
 cuda:10.0:
   extends: .build
   variables:
-    IMAGE: 'nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04'
+    CI_DOCKER_BUILD_ARGS: '--build-arg IMAGE=nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04'
 
 cuda:9.2:
   extends: .build
   variables:
-    IMAGE: 'nvidia/cuda:9.2-cudnn7-devel-ubuntu18.04'
+    CI_DOCKER_BUILD_ARGS: '--build-arg IMAGE=nvidia/cuda:9.2-cudnn7-devel-ubuntu18.04'
+
+
+# special tests
+
+user:
+  extends: .build
+  variables:
+    CI_DOCKER_RUN_ARGS: '--user 1000:1000'
