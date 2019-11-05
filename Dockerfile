@@ -20,7 +20,7 @@ RUN curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/1.2/julia-1.2.0-
 COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.2/
 
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
-    julia -e 'using Pkg; Pkg.instantiate();' && \
+    julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()' && \
     # work around JuliaPackaging/BinaryProvider.jl#183
     chown root:root -R /usr/local/share/julia/packages/*/*/deps/usr && \
     # work around JuliaPackaging/BinaryBuilder.jl#447
@@ -40,8 +40,6 @@ RUN mkdir -m 0777 /data
 ENV JULIA_DEPOT_PATH=/data:/usr/local/share/julia
 
 ENV JULIA_HISTORY=/data/logs/repl_history.jl
-
-COPY startup.jl /usr/local/etc/julia/startup.jl
 
 WORKDIR "/workspace"
 COPY examples /workspace/examples
