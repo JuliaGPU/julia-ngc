@@ -46,7 +46,9 @@ version = "4.0.2"
 
 [[CUDAnative]]
 deps = ["Adapt", "CEnum", "CUDAapi", "CUDAdrv", "DataStructures", "InteractiveUtils", "LLVM", "Libdl", "Printf", "TimerOutputs"]
-git-tree-sha1 = "861a1a9e9741cc55c973a4688079f467a72337a7"
+git-tree-sha1 = "8b067d1ce83e10b305f80946054740259f412d5a"
+repo-rev = "tb/precompile_runtime"
+repo-url = "https://github.com/JuliaGPU/CUDAnative.jl.git"
 uuid = "be33ccc6-a3ff-5ff2-a52e-74243cff1e17"
 version = "2.5.1"
 
