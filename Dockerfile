@@ -21,14 +21,21 @@ COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.2/
 
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
     julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()' && \
-    # work around JuliaPackaging/BinaryProvider.jl#183
-    chown root:root -R /usr/local/share/julia/packages/*/*/deps/usr && \
-    # work around JuliaPackaging/BinaryBuilder.jl#447
-    chmod 755 /usr/local/share/julia/packages/*/*/deps/usr && \
+    # work around JuliaPackaging/BinaryProvider.jl#183 (if used by any dependency)
+    ( chown root:root -f -R /usr/local/share/julia/packages/*/*/deps/usr || : ) && \
+    # work around JuliaPackaging/BinaryBuilder.jl#447 (if used by any dependency)
+    ( chmod 755 -f /usr/local/share/julia/packages/*/*/deps/usr || : ) && \
     # work around JuliaLang/julia#25971
     chmod 644 /usr/local/share/julia/compiled/*/*/*.ji && \
     # fix package folder permissions
     chmod 755 /usr/local/share/julia/packages/*/*
+
+# generate the device runtime library for all known and supported devices
+RUN JULIA_DEPOT_PATH=/usr/local/share/julia CUDA_INIT_SILENT=true \
+    julia -e 'using CUDAnative; CUDAnative.load_runtime.([v"3.0", v"3.2", v"3.5", \
+                                                          v"5.0", v"5.2", v"5.3", \
+                                                          v"6.0", v"6.1", v"6.2", \
+                                                          v"7.0"])'
 
 
 # user environment
