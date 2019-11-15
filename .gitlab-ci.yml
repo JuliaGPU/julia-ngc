@@ -2,13 +2,16 @@ before_script:
   - docker info
   - nvidia-smi
 
+variables:
+  JULIA_CUDA_VERBOSE: 'true'
+
 
 # template
 
 .build:
   script:
     - docker build -t ${CI_JOB_ID} $CI_DOCKER_BUILD_ARGS .
-    - docker run --rm --runtime nvidia --env CUARRAYS_MEMORY_LIMIT $CI_DOCKER_RUN_ARGS $CI_JOB_ID -e '
+    - docker run --rm --runtime nvidia --env CUARRAYS_MEMORY_LIMIT --env JULIA_CUDA_VERBOSE $CI_DOCKER_RUN_ARGS $CI_JOB_ID -e '
           using Pkg;
           run(`id`);
           run(`nvcc --version`);
