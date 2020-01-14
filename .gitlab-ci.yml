@@ -25,8 +25,6 @@ cuda:10.1:
   extends: .build
   variables:
     CI_DOCKER_BUILD_ARGS: '--build-arg IMAGE=nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04'
-  allow_failure: true # https://github.com/JuliaGPU/CuArrays.jl/pull/431
-                      # not part of a tagged version of CuArrays.jl yet
 
 cuda:10.0:
   extends: .build
