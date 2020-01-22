@@ -11,13 +11,14 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/1.2/julia-1.2.0-linux-x86_64.tar.gz | \
+# NOTE: keep the Julia version in sync with .github/workflows/update_packages.yml
+RUN curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/1.3/julia-1.3.1-linux-x86_64.tar.gz | \
     tar -C /usr/local -x -z --strip-components=1 -f -
 
 
 # system-wide packages
 
-COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.2/
+COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.3/
 
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
     julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()' && \
