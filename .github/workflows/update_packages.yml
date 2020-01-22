@@ -1,0 +1,53 @@
+name: update_packages
+
+on: push
+
+jobs:
+  update_packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@v1.0.2
+        with:
+          version: '1.3.1'  # NOTE: keep this in sync with the Dockerfile
+      - name: Update packages
+        id: update
+        run: |
+          output=$(julia --project -e "using Pkg; Pkg.update()")
+          output="${output//'%'/'%25'}"
+          output="${output//$'\n'/'%0A'}"
+          output="${output//$'\r'/'%0D'}"
+          echo "::set-output name=output::$output"
+      - name: Get status
+        id: status
+        run: |
+          output=$(julia --project -e "using Pkg; Pkg.status()")
+          output="${output//'%'/'%25'}"
+          output="${output//$'\n'/'%0A'}"
+          output="${output//$'\r'/'%0D'}"
+          echo "::set-output name=output::$output"
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update packages
+          title: Update packages
+          body: |
+            Updates the following packages:
+
+            ```
+            ${{ steps.status.output }}
+            ```
+
+            <details><summary>Click here for the update log.</summary>
+            <p>
+
+            ```
+            ${{ steps.update.output }}
+            ```
+
+            </p>
+            </details>
+
+            cc @maleadt
+          branch: update_packages
