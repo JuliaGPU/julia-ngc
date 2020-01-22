@@ -1,6 +1,9 @@
 ARG IMAGE=nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
 FROM $IMAGE
 
+COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.3/
+
+
 # julia
 
 RUN apt-get update && \
@@ -11,14 +14,16 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# NOTE: keep the Julia version in sync with .github/workflows/update_packages.yml
-RUN curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/1.3/julia-1.3.1-linux-x86_64.tar.gz | \
+# NOTE: this extracts the Julia version (assumed major.minor.patch) from the
+#       Project.toml to keep it in sync with the GitHub Action workflow.
+
+RUN VERSION=$(grep '^julia = ' /usr/local/share/julia/environments/v1.3/Project.toml | grep -o '".*"' | cut -d '"' -f2) && \
+    RELEASE=$(echo $VERSION | cut -d '.' -f 1,2 ) && \
+    curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/${RELEASE}/julia-${VERSION}-linux-x86_64.tar.gz | \
     tar -C /usr/local -x -z --strip-components=1 -f -
 
 
 # system-wide packages
-
-COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.3/
 
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
     julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()' && \
