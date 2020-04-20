@@ -1,4 +1,4 @@
-ARG IMAGE=nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+ARG IMAGE=nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 FROM $IMAGE
 
 COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.3/
@@ -53,6 +53,8 @@ RUN mkdir -m 0777 /data
 ENV JULIA_DEPOT_PATH=/data:/usr/local/share/julia
 
 ENV JULIA_HISTORY=/data/logs/repl_history.jl
+
+ENV JULIA_CUDA_USE_BINARYBUILDER=false
 
 WORKDIR "/workspace"
 COPY examples /workspace/examples
