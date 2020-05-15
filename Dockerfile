@@ -1,7 +1,7 @@
 ARG IMAGE=nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 FROM $IMAGE
 
-COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.3/
+COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.4/
 
 
 # julia
@@ -17,7 +17,7 @@ RUN apt-get update && \
 # NOTE: this extracts the Julia version (assumed major.minor.patch) from the
 #       Project.toml to keep it in sync with the GitHub Action workflow.
 
-RUN VERSION=$(grep '^julia = ' /usr/local/share/julia/environments/v1.3/Project.toml | grep -o '".*"' | cut -d '"' -f2) && \
+RUN VERSION=$(grep '^julia = ' /usr/local/share/julia/environments/v1.4/Project.toml | grep -o '".*"' | cut -d '"' -f2) && \
     RELEASE=$(echo $VERSION | cut -d '.' -f 1,2 ) && \
     curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/${RELEASE}/julia-${VERSION}-linux-x86_64.tar.gz | \
     tar -C /usr/local -x -z --strip-components=1 -f -
@@ -26,15 +26,7 @@ RUN VERSION=$(grep '^julia = ' /usr/local/share/julia/environments/v1.3/Project.
 # system-wide packages
 
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
-    julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()' && \
-    # work around JuliaPackaging/BinaryProvider.jl#183 (if used by any dependency)
-    ( chown root:root -f -R /usr/local/share/julia/packages/*/*/deps/usr || : ) && \
-    # work around JuliaPackaging/BinaryBuilder.jl#447 (if used by any dependency)
-    ( chmod 755 -f /usr/local/share/julia/packages/*/*/deps/usr || : ) && \
-    # work around JuliaLang/julia#25971
-    chmod 644 /usr/local/share/julia/compiled/*/*/*.ji && \
-    # fix package folder permissions
-    chmod 755 /usr/local/share/julia/packages/*/*
+    julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()'
 
 # generate the device runtime library for all known and supported devices
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia CUDA_INIT_SILENT=true \
