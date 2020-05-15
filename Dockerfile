@@ -27,12 +27,6 @@ RUN VERSION=$(grep '^julia = ' /usr/local/share/julia/environments/v1.4/Project.
 
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
     julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()' && \
-    # work around JuliaPackaging/BinaryProvider.jl#183 (if used by any dependency)
-    ( chown root:root -f -R /usr/local/share/julia/packages/*/*/deps/usr || : ) && \
-    # work around JuliaPackaging/BinaryBuilder.jl#447 (if used by any dependency)
-    ( chmod 755 -f /usr/local/share/julia/packages/*/*/deps/usr || : ) && \
-    # work around JuliaLang/julia#25971
-    chmod 644 /usr/local/share/julia/compiled/*/*/*.ji && \
     # fix package folder permissions
     chmod 755 /usr/local/share/julia/packages/*/*
 
