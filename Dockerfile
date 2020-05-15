@@ -26,9 +26,7 @@ RUN VERSION=$(grep '^julia = ' /usr/local/share/julia/environments/v1.4/Project.
 # system-wide packages
 
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
-    julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()' && \
-    # fix package folder permissions
-    chmod 755 /usr/local/share/julia/packages/*/*
+    julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()'
 
 # generate the device runtime library for all known and supported devices
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia CUDA_INIT_SILENT=true \
