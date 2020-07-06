@@ -1,4 +1,4 @@
-ARG IMAGE=nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+ARG IMAGE=nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 FROM $IMAGE
 
 COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.4/
