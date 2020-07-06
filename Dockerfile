@@ -30,10 +30,10 @@ RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
 
 # generate the device runtime library for all known and supported devices
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia CUDA_INIT_SILENT=true \
-    julia -e 'using CUDAnative; CUDAnative.load_runtime.([v"3.0", v"3.2", v"3.5", v"3.7", \
-                                                          v"5.0", v"5.2", v"5.3", \
-                                                          v"6.0", v"6.1", v"6.2", \
-                                                          v"7.0"])'
+    julia -e 'using CUDA; CUDA.load_runtime.([v"3.0", v"3.2", v"3.5", v"3.7", \
+                                              v"5.0", v"5.2", v"5.3", \
+                                              v"6.0", v"6.1", v"6.2", \
+                                              v"7.0"])'
 
 
 # user environment
