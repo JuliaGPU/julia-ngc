@@ -1,6 +1,6 @@
-using CUDAdrv
+using CUDA
 
 println("Available GPUs:")
 for dev in devices()
-    println("- ", CUDAdrv.name(dev))
+    println("- ", CUDA.name(dev))
 end
