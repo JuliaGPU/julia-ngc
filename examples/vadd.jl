@@ -1,4 +1,4 @@
-using CUDAnative, CuArrays
+using CUDA
 using Test
 
 function vadd(a, b, c)
