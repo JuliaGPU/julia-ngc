@@ -1,7 +1,7 @@
 ARG IMAGE=nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 FROM $IMAGE
 
-COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.4/
+COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.5/
 
 
 # julia
@@ -17,7 +17,7 @@ RUN apt-get update && \
 # NOTE: this extracts the Julia version (assumed major.minor.patch) from the
 #       Project.toml to keep it in sync with the GitHub Action workflow.
 
-RUN VERSION=$(grep '^julia = ' /usr/local/share/julia/environments/v1.4/Project.toml | grep -o '".*"' | cut -d '"' -f2) && \
+RUN VERSION=$(grep '^julia = ' /usr/local/share/julia/environments/v1.5/Project.toml | grep -o '".*"' | cut -d '"' -f2) && \
     RELEASE=$(echo $VERSION | cut -d '.' -f 1,2 ) && \
     curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/${RELEASE}/julia-${VERSION}-linux-x86_64.tar.gz | \
     tar -C /usr/local -x -z --strip-components=1 -f -
