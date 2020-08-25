@@ -27,7 +27,7 @@ cuda:11.0:
 cuda:10.2:
   extends: .build
   variables:
-    CI_DOCKER_BUILD_ARGS: '--build-arg IMAGE=nvidia/cuda:10.2-cudnn7-runtime-ubuntu18.04'
+    CI_DOCKER_BUILD_ARGS: '--build-arg IMAGE=nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04'
 
 cuda:10.1:
   extends: .build
