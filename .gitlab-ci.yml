@@ -7,7 +7,7 @@ before_script:
 
 .build:
   script:
-    - docker build -t ${CI_JOB_ID} $CI_DOCKER_BUILD_ARGS .
+    - docker build --pull --tag ${CI_JOB_ID} $CI_DOCKER_BUILD_ARGS .
     - docker run --rm --runtime nvidia --env JULIA_CUDA_MEMORY_LIMIT --env JULIA_DEBUG $CI_DOCKER_RUN_ARGS $CI_JOB_ID -e '
           run(`id`);
           using CUDA;
