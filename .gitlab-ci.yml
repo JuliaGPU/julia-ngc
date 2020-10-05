@@ -11,8 +11,11 @@ before_script:
   script: |
     docker build --pull --tag ${CI_JOB_ID} $CI_DOCKER_BUILD_ARGS .
     DRIVER=$(find /usr/lib/x86_64-linux-gnu/nvidia -name 'libcuda.so.*' -type f)
+    COMPILER=$(find /usr/lib/x86_64-linux-gnu/nvidia -name 'libnvidia-ptxjitcompiler.so.*' -type f)
     docker run --rm --gpus all --env JULIA_CUDA_MEMORY_LIMIT $CI_DOCKER_RUN_ARGS \
-               --volume "$DRIVER:/usr/lib/x86_64-linux-gnu/libcuda.so.1" $CI_JOB_ID -e '
+               --volume "$DRIVER:/usr/lib/x86_64-linux-gnu/libcuda.so.1" \
+               --volume "$COMPILER:/usr/lib/x86_64-linux-gnu/libnvidia-ptxjitcompiler.so.1" \
+               $CI_JOB_ID -e '
       run(`id`);
       using CUDA;
       CUDA.versioninfo();
