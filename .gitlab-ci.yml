@@ -5,16 +5,21 @@ before_script:
 
 # template
 
+# FIXME: https://gitlab.com/nvidia/container-images/cuda/-/issues/93
+
 .build:
-  script:
-    - docker build --pull --tag ${CI_JOB_ID} $CI_DOCKER_BUILD_ARGS .
-    - docker run --rm --gpus all --env JULIA_CUDA_MEMORY_LIMIT $CI_DOCKER_RUN_ARGS $CI_JOB_ID --volume "/usr/lib/x86_64-linux-gnu/nvidia/current/libcuda.so.450.57:/usr/lib/x86_64-linux-gnu/libcuda.so.1" -e '
-          run(`id`);
-          using CUDA;
-          CUDA.versioninfo();
-          using Pkg;
-          Pkg.test(collect(keys(Pkg.installed())));'
-    - docker rmi ${CI_JOB_ID}
+  script: |
+    docker build --pull --tag ${CI_JOB_ID} $CI_DOCKER_BUILD_ARGS .
+    DRIVER=$(find /usr/lib/x86_64-linux-gnu/nvidia -name 'libcuda.so.*' -type f)
+    docker run --rm --gpus all --env JULIA_CUDA_MEMORY_LIMIT $CI_DOCKER_RUN_ARGS \
+               --volume "$DRIVER:/usr/lib/x86_64-linux-gnu/libcuda.so.1" $CI_JOB_ID -e '
+      run(`id`);
+      using CUDA;
+      CUDA.versioninfo();
+      using Pkg;
+      Pkg.test(collect(keys(Pkg.installed())));'
+    docker rmi ${CI_JOB_ID}
+  interruptible: true
 
 
 # CUDA versions
