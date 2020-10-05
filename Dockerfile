@@ -30,7 +30,9 @@ RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
 
 # generate the device runtime library for all known and supported devices
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
-    julia -e 'using CUDA; CUDA.precompile_runtime()'
+    julia -e 'using CUDA; CUDA.precompile_runtime()' && \
+    chmod 644 /usr/local/share/julia/compiled/v1.5/GPUCompiler/*/*.bc
+    # TODO: fix this in GPUCompiler.jl
 
 
 # user environment
