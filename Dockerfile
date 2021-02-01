@@ -1,7 +1,7 @@
 ARG IMAGE=nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 FROM $IMAGE
 
-COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v1.5/
+ARG JULIA=1.5
 
 
 # julia
@@ -14,16 +14,13 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# NOTE: this extracts the Julia version (assumed major.minor.patch) from the
-#       Project.toml to keep it in sync with the GitHub Action workflow.
-
-RUN VERSION=$(grep '^julia = ' /usr/local/share/julia/environments/v1.5/Project.toml | grep -o '".*"' | cut -d '"' -f2) && \
-    RELEASE=$(echo $VERSION | cut -d '.' -f 1,2 ) && \
-    curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/${RELEASE}/julia-${VERSION}-linux-x86_64.tar.gz | \
+RUN curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/${JULIA}/julia-${JULIA}-latest-linux-x86_64.tar.gz | \
     tar -C /usr/local -x -z --strip-components=1 -f -
 
 
 # system-wide packages
+
+COPY Project.toml Manifest.toml /usr/local/share/julia/environments/v${JULIA}/
 
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
     julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()'
@@ -31,7 +28,7 @@ RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
 # generate the device runtime library for all known and supported devices
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
     julia -e 'using CUDA; CUDA.precompile_runtime()' && \
-    chmod 644 /usr/local/share/julia/compiled/v1.5/GPUCompiler/*/*.bc
+    chmod 644 /usr/local/share/julia/compiled/v${JULIA}/GPUCompiler/*/*.bc
     # TODO: fix this in GPUCompiler.jl
 
 
