@@ -27,10 +27,15 @@ before_script:
 
 # CUDA versions
 
+cuda:11.1:
+  extends: .build
+  variables:
+    CI_DOCKER_BUILD_ARGS: '--build-arg IMAGE=nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04'
+
 cuda:11.0:
   extends: .build
   variables:
-    CI_DOCKER_BUILD_ARGS: '--build-arg IMAGE=nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04'
+    CI_DOCKER_BUILD_ARGS: '--build-arg IMAGE=nvidia/cuda:11.0.3-cudnn8-devel-ubuntu20.04'
 
 cuda:10.2:
   extends: .build
