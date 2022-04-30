@@ -1,4 +1,4 @@
-ARG IMAGE=nvidia/cuda:11.6.0-cudnn8-devel-ubuntu20.04
+ARG IMAGE=nvidia/cuda:11.4.3-cudnn8-devel-ubuntu20.04
 FROM $IMAGE
 
 ARG JULIA_RELEASE=1.7
