@@ -7,15 +7,14 @@ ARG JULIA_VERSION=1.7.2
 
 # julia
 
-RUN apt-get install wget && \
-    apt-key del 7fa2af80 && \
-    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb && \
-    dpkg -i cuda-keyring_1.0-1_all.deb && \
+RUN apt-key del 7fa2af80 && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install --yes --no-install-recommends \
     # basic stuff
-    curl ca-certificates && \
+    wget curl ca-certificates && \
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb && \
+    dpkg -i cuda-keyring_1.0-1_all.deb && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
