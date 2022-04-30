@@ -1,4 +1,4 @@
-ARG IMAGE=nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04
+ARG IMAGE=nvidia/cuda:11.6.0-cudnn8-devel-ubuntu20.04
 FROM $IMAGE
 
 ARG JULIA_RELEASE=1.7
@@ -7,14 +7,11 @@ ARG JULIA_VERSION=1.7.2
 
 # julia
 
-RUN apt-key del 7fa2af80 && \
-    apt-get update && \
+RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install --yes --no-install-recommends \
     # basic stuff
-    wget curl ca-certificates && \
-    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb && \
-    dpkg -i cuda-keyring_1.0-1_all.deb && \
+    curl ca-certificates && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
