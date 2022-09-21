@@ -1,8 +1,9 @@
 ARG IMAGE=nvidia/cuda:11.4.3-cudnn8-devel-ubuntu20.04
 FROM $IMAGE
 
-ARG JULIA_RELEASE=1.7
-ARG JULIA_VERSION=1.7.2
+ARG JULIA_RELEASE=1.8
+ARG JULIA_VERSION=1.8.1
+ARG JULI_PKG_SERVER=https://mirrors.bfsu.edu.cn/julia
 
 
 # julia
@@ -44,6 +45,8 @@ ENV JULIA_DEPOT_PATH=/data:/usr/local/share/julia
 ENV JULIA_HISTORY=/data/logs/repl_history.jl
 
 ENV JULIA_CUDA_USE_BINARYBUILDER=false
+
+ENV JULI_PKG_SERVER=$JULI_PKG_SERVER
 
 WORKDIR "/workspace"
 COPY examples /workspace/examples
