@@ -6,9 +6,10 @@ on:
     branches: [ master ]
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: findmyway/julia-ngc
-  JULIA_RELEASE: 1.7
-  JULIA_VERSION: 1.7.2
+  IMAGE_NAME: ${{ github.repository }}
+  JULIA_RELEASE: 1.11
+  JULIA_VERSION: 1.11.2
+  BASE_IMAGE: nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,6 +37,7 @@ jobs:
         build-args: |
           JULIA_RELEASE=${{ env.JULIA_RELEASE }}
           JULIA_VERSION=${{ env.JULIA_VERSION }}
+          IMAGE=${{ env.BASE_IMAGE }}
         context: .
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
