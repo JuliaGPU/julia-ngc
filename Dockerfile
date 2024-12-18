@@ -10,8 +10,8 @@ ARG JULIA_VERSION=1.9.0-rc3
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install --yes --no-install-recommends \
-    # basic stuff
-    curl ca-certificates nano && \
+                    # basic stuff
+                    curl ca-certificates nano && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -21,7 +21,7 @@ RUN curl -s -L https://julialang-s3.julialang.org/bin/linux/x64/${JULIA_RELEASE}
 
 # system-wide packages
 
-COPY Project.toml Manifest.toml LocalPreferences.toml /usr/local/share/julia/environments/v${JULIA_RELEASE}/
+COPY Project.toml Manifest*.toml LocalPreferences.toml /usr/local/share/julia/environments/v${JULIA_RELEASE}/
 
 RUN JULIA_DEPOT_PATH=/usr/local/share/julia \
     julia -e 'using Pkg; Pkg.instantiate(); Pkg.API.precompile()'

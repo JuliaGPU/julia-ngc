@@ -40,7 +40,5 @@ jobs:
           IMAGE=${{ env.BASE_IMAGE }}
         context: .
         push: ${{ github.event_name != 'pull_request' }}
-        tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.JULIA_RELEASE }}
+        tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
