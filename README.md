@@ -1,5 +1,7 @@
 # Julia for NGC
 
+**NOTE: This repository has been archived. CUDA.jl now provides its own `Dockerfile`.**
+
 This repository provides a Docker recipe suitable for running the latest version
 of Julia and its CUDA GPU stack. It has been developed for use on NGC, NVIDIA's
 catalog of Docker containers, but can be used with plain Docker as well.
